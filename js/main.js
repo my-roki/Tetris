@@ -1,5 +1,6 @@
 import { COLS, ROWS, BLOCK_SIZE } from "./constants.js";
 import Board from "./board.js";
+import Tetromino from "./piece.js";
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
@@ -13,6 +14,8 @@ ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 function play() {
   board.reset();
+  let tetromino = new Tetromino(ctx);
+  tetromino.draw();
   console.table(board.grid);
 }
 
