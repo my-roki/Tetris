@@ -36,4 +36,9 @@ export default class Tetromino {
       });
     });
   }
+
+  move(p) {
+    this.x = p.x;
+    this.y = p.y;
+  }
 }
