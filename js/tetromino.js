@@ -1,25 +1,21 @@
-export default class Tetromino {
-  x;
-  y;
-  color;
-  shape;
-  ctx;
+import { SHAPES, COLORS } from "./constants.js";
 
+export default class Tetromino {
   constructor(ctx) {
     this.ctx = ctx;
     this.spawn();
   }
 
-  spawn() {
-    this.color = "blue";
-    this.shape = [
-      [2, 0, 0],
-      [2, 2, 2],
-      [0, 0, 0],
-    ];
+  randomizeTetrominoType(num) {
+    return Math.floor(Math.random() * num);
+  }
 
-    this.x = 3;
-    this.y = 0;
+  spawn() {
+    const typeId = this.randomizeTetrominoType(COLORS.length);
+    this.color = COLORS[typeId];
+    this.shape = SHAPES[typeId];
+    this.x = typeId === 3 ? 4 : 3;
+    this.y = typeId === 0 ? -1 : 0;
   }
 
   draw() {
@@ -40,5 +36,16 @@ export default class Tetromino {
   move(p) {
     this.x = p.x;
     this.y = p.y;
+    this.shape = p.shape;
+  }
+
+  rotate(p) {
+    for (let y = 0; y < p.shape.length; ++y) {
+      for (let x = 0; x < y; ++x) {
+        [p.shape[x][y], p.shape[y][x]] = [p.shape[y][x], p.shape[x][y]];
+      }
+    }
+    p.shape.forEach((row) => row.reverse());
+    return p;
   }
 }
