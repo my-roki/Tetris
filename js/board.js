@@ -1,4 +1,4 @@
-import { ROWS, COLS, BLOCK_SIZE } from "./constants.js";
+import { ROWS, COLS, BLOCK_SIZE, COLORS } from "./constants.js";
 import Tetromino from "./tetromino.js";
 
 export default class Board {
@@ -17,7 +17,7 @@ export default class Board {
     this.grid = this.getEmptyBoard();
     this.tetromino = new Tetromino(this.ctx);
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    this.tetromino.draw();
+    this.tetromino.drawTetromino();
   }
 
   getEmptyBoard() {
@@ -41,5 +41,27 @@ export default class Board {
   }
   notOccupied(x, y) {
     return this.grid[y] && this.grid[y][x] === 0;
+  }
+
+  freeze() {
+    this.tetromino.shape.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value > 0) {
+          this.grid[y + this.tetromino.y][x + this.tetromino.x] = value;
+        }
+      });
+    });
+  }
+
+  drawBoard() {
+    this.grid.forEach((row, y) => {
+      row.forEach((value, x) => {
+        if (value > 0) {
+          this.ctx.fillStyle = COLORS[value - 1];
+          this.ctx.fillRect(x, y, 1, 1);
+          this.ctx.strokeRect(x, y, 1, 1);
+        }
+      });
+    });
   }
 }

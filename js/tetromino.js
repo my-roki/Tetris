@@ -18,7 +18,7 @@ export default class Tetromino {
     this.y = typeId === 0 ? -1 : 0;
   }
 
-  draw() {
+  drawTetromino() {
     this.ctx.fillStyle = this.color;
     this.ctx.strokeStyle = "#ffffff";
     this.ctx.lineWidth = 0.1;

@@ -17,19 +17,18 @@ const moves = {
 
 let board = new Board(ctx);
 let requestId;
-let time = { start: 0, elapsed: 0, level: 6000 };
+let time = { start: 0, elapsed: 0, level: 1000 };
 
-function animate(now = 0) {
-  time.elapsed = now - new Date().getSeconds(time.start);
+function animate() {
+  time.elapsed = Date.now() - time.start;
 
-  console.log(time);
   if (time.elapsed > time.level) {
-    time.elapsed = 0;
+    time.start = Date.now();
     drop();
   }
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  board.tetromino.draw();
+  draw();
   requestId = requestAnimationFrame(animate);
 }
 
@@ -52,6 +51,9 @@ function drop() {
 
   if (board.moveValid(p)) {
     board.tetromino.move(p);
+  } else {
+    board.freeze();
+    board.tetromino = new Tetromino(ctx);
   }
 }
 
@@ -68,8 +70,15 @@ function handleKeys(event) {
       board.tetromino.move(p);
     }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    board.tetromino.draw();
+    board.tetromino.drawTetromino();
   }
+}
+
+function draw() {
+  // Clear old position before drawing.
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  board.drawBoard();
+  board.tetromino.drawTetromino();
 }
 
 playButton.addEventListener("click", play);
