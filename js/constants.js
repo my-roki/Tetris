@@ -5,9 +5,10 @@ export const BLOCK_SIZE = 30;
 export const KEYS = {
   LEFT: 37,
   RIGHT: 39,
-  UP: 40,
-  DOWN: 38,
+  UP: 38,
+  DOWN: 40,
   SPACE: 32,
+  Q: 81,
 };
 
 export const COLORS = [
@@ -57,3 +58,5 @@ export const SHAPES = [
     [0, 0, 0],
   ],
 ];
+
+Object.freeze(KEYS);
