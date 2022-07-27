@@ -1,4 +1,4 @@
-import { ROWS, COLS, BLOCK_SIZE, COLORS } from "./constants.js";
+import { ROWS, COLS, BLOCK_SIZE, COLORS, KEYS } from "./constants.js";
 import Tetromino from "./tetromino.js";
 
 export default class Board {
@@ -50,6 +50,19 @@ export default class Board {
           this.grid[y + this.tetromino.y][x + this.tetromino.x] = value;
         }
       });
+    });
+  }
+
+  clearLines() {
+    this.grid.forEach((row, y) => {
+      // If every value is greater than zero then we have a full row.
+      if (row.every((value) => value > 0)) {
+        // Remove the row.
+        this.grid.splice(y, 1);
+
+        // Add zero-filled row at the top.
+        this.grid.unshift(Array(COLS).fill(0));
+      }
     });
   }
 

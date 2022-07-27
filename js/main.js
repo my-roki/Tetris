@@ -24,6 +24,11 @@ function animate() {
 
   if (time.elapsed > time.level) {
     time.start = Date.now();
+
+    if (!drop()) {
+      gameOver();
+      return;
+    }
     drop();
   }
 
@@ -46,6 +51,16 @@ function play() {
   // console.table(board.grid);
 }
 
+function gameOver() {
+  cancelAnimationFrame(requestId);
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(1, 3, 8, 1.2);
+  ctx.font = "1px Arial";
+  ctx.fillStyle = "red";
+  ctx.fillText("GAME OVER", 1.8, 4);
+}
+
 function drop() {
   let p = moves[KEYS.DOWN](board.tetromino);
 
@@ -53,8 +68,14 @@ function drop() {
     board.tetromino.move(p);
   } else {
     board.freeze();
+    board.clearLines();
+
+    if (board.tetromino.y === 0) {
+      return false;
+    }
     board.tetromino = new Tetromino(ctx);
   }
+  return true;
 }
 
 function handleKeys(event) {
