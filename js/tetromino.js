@@ -7,6 +7,7 @@ export default class Tetromino {
   }
 
   randomizeTetrominoType(num) {
+    // TODO: predictable radomize
     return Math.floor(Math.random() * num);
   }
 
@@ -15,7 +16,7 @@ export default class Tetromino {
     this.color = COLORS[typeId];
     this.shape = SHAPES[typeId];
     this.x = typeId === 3 ? 4 : 3;
-    this.y = typeId === 0 ? -1 : 0;
+    this.y = typeId === 0 ? -2 : -1;
   }
 
   drawTetromino() {

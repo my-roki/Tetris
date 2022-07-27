@@ -59,4 +59,16 @@ export const SHAPES = [
   ],
 ];
 
+export const POINTS = {
+  SINGLE: 100,
+  DOUBLE: 300,
+  TRIPLE: 500,
+  TETRIS: 800,
+  SOFT_DROP: 1,
+  HARD_DROP: 2,
+};
+
 Object.freeze(KEYS);
+Object.freeze(COLORS);
+Object.freeze(SHAPES);
+Object.freeze(POINTS);

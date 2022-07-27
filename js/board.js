@@ -1,5 +1,6 @@
-import { ROWS, COLS, BLOCK_SIZE, COLORS, KEYS } from "./constants.js";
+import { ROWS, COLS, BLOCK_SIZE, COLORS, KEYS, POINTS } from "./constants.js";
 import Tetromino from "./tetromino.js";
+import { account } from "./main.js";
 
 export default class Board {
   constructor(ctx) {
@@ -29,15 +30,17 @@ export default class Board {
       return row.every((value, dx) => {
         const x = p.x + dx;
         const y = p.y + dy;
-        return (
-          value === 0 || (this.isInsideWall(x, y) && this.notOccupied(x, y))
-        );
+
+        // 첫 스폰 위치를 -2번째부터 시작하기 위해 조건을 살짝 조절
+        let cond = this.notOccupied(x, y);
+        cond === undefined ? (cond = true) : cond;
+        return value === 0 || (this.isInsideWall(x, y) && cond);
       });
     });
   }
 
   isInsideWall(x, y) {
-    return x >= 0 && x < COLS && y >= 0 && y <= ROWS;
+    return x >= 0 && x < COLS && y <= ROWS - 1;
   }
   notOccupied(x, y) {
     return this.grid[y] && this.grid[y][x] === 0;
@@ -54,6 +57,7 @@ export default class Board {
   }
 
   clearLines() {
+    let lines = 0;
     this.grid.forEach((row, y) => {
       // If every value is greater than zero then we have a full row.
       if (row.every((value) => value > 0)) {
@@ -62,8 +66,15 @@ export default class Board {
 
         // Add zero-filled row at the top.
         this.grid.unshift(Array(COLS).fill(0));
+        lines += 1;
       }
     });
+
+    // Add points if we cleared some lines
+    if (lines > 0) {
+      account.score += this.getLineClearPoints(lines);
+      account.lines += lines;
+    }
   }
 
   drawBoard() {
@@ -76,5 +87,19 @@ export default class Board {
         }
       });
     });
+  }
+
+  getLineClearPoints(lines) {
+    const points =
+      lines === 1
+        ? POINTS.SINGLE
+        : lines === 2
+        ? POINTS.DOUBLE
+        : lines === 3
+        ? POINTS.TRIPLE
+        : lines === 4
+        ? POINTS.TETRIS
+        : 0;
+    return points;
   }
 }

@@ -1,4 +1,4 @@
-import { KEYS } from "./constants.js";
+import { KEYS, POINTS } from "./constants.js";
 import Board from "./board.js";
 import Tetromino from "./tetromino.js";
 
@@ -18,18 +18,34 @@ const moves = {
 let board = new Board(ctx);
 let requestId;
 let time = { start: 0, elapsed: 0, level: 1000 };
+let accountValues = { score: 0, lines: 0 };
+
+export let account = new Proxy(accountValues, {
+  set: (target, key, value) => {
+    target[key] = value;
+    updateAccount(key, value);
+    return true;
+  },
+});
+
+export function updateAccount(key, value) {
+  const element = document.getElementById(key);
+  if (element) {
+    element.textContent = value;
+  }
+}
 
 function animate() {
   time.elapsed = Date.now() - time.start;
 
   if (time.elapsed > time.level) {
     time.start = Date.now();
-
-    if (!drop()) {
+    // the block goes down several times when use the drop function several times, so take the return value and then process the code
+    const isContinue = drop();
+    if (!isContinue) {
       gameOver();
       return;
     }
-    drop();
   }
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -86,9 +102,15 @@ function handleKeys(event) {
       while (board.moveValid(p)) {
         board.tetromino.move(p);
         p = moves[event.keyCode](board.tetromino);
+        account.score += POINTS.HARD_DROP;
       }
+      // when hard drop, board freez will active directly
+      board.freeze();
     } else if (board.moveValid(p)) {
       board.tetromino.move(p);
+      if (event.keyCode === KEYS.DOWN) {
+        account.score += POINTS.SOFT_DROP;
+      }
     }
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     board.tetromino.drawTetromino();
