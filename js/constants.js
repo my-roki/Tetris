@@ -68,6 +68,21 @@ export const POINTS = {
   HARD_DROP: 2,
 };
 
+export const LINES_PER_LEVEL = 10;
+export const LEVEL = {
+  1: 1000,
+  2: 900,
+  3: 790,
+  4: 670,
+  5: 540,
+  6: 400,
+  7: 250,
+  8: 100,
+  9: 50,
+  10: 10,
+};
+
+Object.freeze(LEVEL);
 Object.freeze(KEYS);
 Object.freeze(COLORS);
 Object.freeze(SHAPES);

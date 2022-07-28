@@ -1,4 +1,4 @@
-import { KEYS, POINTS } from "./constants.js";
+import { KEYS, POINTS, LEVEL } from "./constants.js";
 import Board from "./board.js";
 import Tetromino from "./tetromino.js";
 
@@ -17,8 +17,8 @@ const moves = {
 
 let board = new Board(ctx);
 let requestId;
-let time = { start: 0, elapsed: 0, level: 1000 };
-let accountValues = { score: 0, lines: 0 };
+export let time = { start: 0, elapsed: 0, speed: 1000 };
+let accountValues = { score: 0, lines: 0, level: 1 };
 
 export let account = new Proxy(accountValues, {
   set: (target, key, value) => {
@@ -38,7 +38,7 @@ export function updateAccount(key, value) {
 function animate() {
   time.elapsed = Date.now() - time.start;
 
-  if (time.elapsed > time.level) {
+  if (time.elapsed > time.speed) {
     time.start = Date.now();
     // the block goes down several times when use the drop function several times, so take the return value and then process the code
     const isContinue = drop();
@@ -54,9 +54,9 @@ function animate() {
 }
 
 function play() {
+  // TODO : Shuld fix the bug that doesn't reset game
+  resetGame();
   board.reset();
-  let tetromino = new Tetromino(ctx);
-  board.tetromino = tetromino;
 
   if (requestId) {
     cancelAnimationFrame(requestId);
@@ -75,6 +75,14 @@ function gameOver() {
   ctx.font = "1px Arial";
   ctx.fillStyle = "red";
   ctx.fillText("GAME OVER", 1.8, 4);
+}
+
+function resetGame() {
+  account.score = 0;
+  account.lines = 0;
+  account.level = 0;
+  board = new Board(ctx);
+  time = { start: Date.now(), elapsed: 0, speed: LEVEL[1] };
 }
 
 function drop() {

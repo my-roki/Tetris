@@ -1,6 +1,14 @@
-import { ROWS, COLS, BLOCK_SIZE, COLORS, KEYS, POINTS } from "./constants.js";
+import {
+  ROWS,
+  COLS,
+  BLOCK_SIZE,
+  COLORS,
+  POINTS,
+  LINES_PER_LEVEL,
+  LEVEL,
+} from "./constants.js";
 import Tetromino from "./tetromino.js";
-import { account } from "./main.js";
+import { account, time } from "./main.js";
 
 export default class Board {
   constructor(ctx) {
@@ -74,6 +82,17 @@ export default class Board {
     if (lines > 0) {
       account.score += this.getLineClearPoints(lines);
       account.lines += lines;
+
+      if (account.lines >= LINES_PER_LEVEL) {
+        // Goto next level
+        account.level += 1;
+
+        // Remove lines so we start working for the next level.
+        account.lines -= LINES_PER_LEVEL;
+
+        // Increase speed of the game.
+        time.speed = LEVEL[account.level];
+      }
     }
   }
 
