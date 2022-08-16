@@ -4,8 +4,13 @@
 
 .grid {
   display: grid;
+  grid-template-columns: 300px 320px 200px;
+}
+
+.left-column {
+  display: flex;
   flex-direction: column;
-  grid-template-columns: 320px 200px;
+  margin-left: 20px;
 }
 
 .right-column {

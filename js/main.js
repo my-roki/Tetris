@@ -1,4 +1,10 @@
-import { KEYS, POINTS, LEVEL } from "./constants.js";
+import {
+  KEYS,
+  POINTS,
+  LEVEL,
+  HIGH_SCORES,
+  NUM_OF_HIGH_SCORES,
+} from "./constants.js";
 import Board from "./board.js";
 import Tetromino from "./tetromino.js";
 
@@ -75,6 +81,7 @@ function gameOver() {
   ctx.font = "1px Arial";
   ctx.fillStyle = "red";
   ctx.fillText("GAME OVER", 1.8, 4);
+  checkHighScore(account.score);
 }
 
 function resetGame() {
@@ -130,6 +137,40 @@ function draw() {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   board.drawBoard();
   board.tetromino.drawTetromino();
+}
+
+const highScoreString = localStorage.getItem(HIGH_SCORES);
+function checkHighScore(score) {
+  const highScores = JSON.parse(highScoreString) || [];
+  console.log(highScores);
+  const lowestScore = highScores[NUM_OF_HIGH_SCORES - 1]?.score ?? 0;
+
+  if (score > lowestScore) {
+    saveHighScore(score, highScores);
+    showHighScores();
+  }
+}
+
+function saveHighScore(score, highScores) {
+  const name = prompt("You got a highscore! Enter name:");
+
+  const newScore = { score, name };
+
+  highScores.push(newScore);
+  highScores.sort((a, b) => b.score - a.score);
+  highScores.splice(NUM_OF_HIGH_SCORES);
+
+  localStorage.setItem(HIGH_SCORES, JSON.stringify(highScores));
+}
+
+function showHighScores() {
+  const highScores = JSON.parse(localStorage.getItem(HIGH_SCORES)) || [];
+
+  const highScoreList = document.getElementById(HIGH_SCORES);
+
+  highScoreList.innerHTML = highScores
+    .map((score) => `<li>${score.score} - ${score.name}`)
+    .join("");
 }
 
 playButton.addEventListener("click", play);

@@ -82,6 +82,9 @@ export const LEVEL = {
   10: 10,
 };
 
+export const NUM_OF_HIGH_SCORES = 10;
+export const HIGH_SCORES = "highScores";
+
 Object.freeze(LEVEL);
 Object.freeze(KEYS);
 Object.freeze(COLORS);
